@@ -50,6 +50,7 @@ public final class RePaperUtils extends JavaPlugin {
     }
 
     public void reload() {
+        warn("Reloading " + NAME + "!");
         reloadConfig();
         Config.setupConfig(modules);
         for (PluginModule<?> module : modules)
