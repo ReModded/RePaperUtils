@@ -18,6 +18,7 @@ public final class RePaperUtils extends JavaPlugin {
     public static RePaperUtils INSTANCE;
 
     public final List<PluginModule<?>> modules = ImmutableList.of(
+        new TextCommandsModule(this),
         new VoucherModule(this)
     );
 
