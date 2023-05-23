@@ -18,6 +18,7 @@ import org.bukkit.plugin.Plugin;
 
 import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
 
 @SuppressWarnings("unused")
 public class CommandsUtils {
@@ -63,15 +64,19 @@ public class CommandsUtils {
             if(command instanceof VanillaCommandWrapper)
                 CommandsUtils.commands.getDispatcher().getRoot().removeCommand(pair.getKey());
         });
-   }
+    }
 
-   public static void updateCommandDispatcher() {
+    public static void updateCommandDispatcher() {
        ((CraftServer)Bukkit.getServer()).syncCommands();
    }
 
-   public static String createCommandPermission(final String permission) {
+    public static String createCommandPermission(final String permission) {
         return RePaperUtils.ID + "." + permission;
    }
+
+    public static Predicate<CommandSourceStack> getPermissionRequirements(String permission) {
+        return src -> src.getBukkitSender().hasPermission(CommandsUtils.createCommandPermission(permission));
+    }
 
     private static String getPermission(final Plugin plugin, final CommandNode<CommandSourceStack> command) {
         final String commandName;

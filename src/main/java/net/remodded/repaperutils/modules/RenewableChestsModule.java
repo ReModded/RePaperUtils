@@ -86,7 +86,7 @@ public class RenewableChestsModule extends PluginModule<RePaperUtils> {
     private void initCommand() {
         command = CommandsUtils.register(plugin,
             literal("renewablechests")
-                .requires(src -> src.getBukkitSender().hasPermission(CommandsUtils.createCommandPermission("renewablechests")))
+                .requires(CommandsUtils.getPermissionRequirements("renewablechests"))
                 .then(literal("add")
                         .then(literal("item")
                                 .then(argument("Chest name", StringArgumentType.word())
