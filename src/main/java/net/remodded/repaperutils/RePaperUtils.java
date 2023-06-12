@@ -29,7 +29,8 @@ public final class RePaperUtils extends JavaPlugin {
         new VoucherModule(this),
         new HardcoreModule(this),
         new TimedEffectModule(this),
-        new BlocksCommandsModule(this)
+        new BlocksCommandsModule(this),
+        new WitherBuildBlockerModule(this)
     );
 
     @Override
