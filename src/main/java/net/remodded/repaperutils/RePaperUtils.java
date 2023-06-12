@@ -27,7 +27,8 @@ public final class RePaperUtils extends JavaPlugin {
         new StartupCommandsModule(this),
         new TextCommandsModule(this),
         new VoucherModule(this),
-        new TimedEffectModule(this)
+        new TimedEffectModule(this),
+        new BlocksCommandsModule(this)
     );
 
     @Override

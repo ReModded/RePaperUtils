@@ -11,6 +11,7 @@ import net.remodded.repaperutils.RePaperUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandMap;
+import org.bukkit.command.CommandSender;
 import org.bukkit.craftbukkit.v1_19_R3.CraftServer;
 import org.bukkit.craftbukkit.v1_19_R3.command.VanillaCommandWrapper;
 import org.bukkit.entity.Player;
@@ -19,21 +20,41 @@ import org.bukkit.plugin.Plugin;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
+import java.util.regex.Pattern;
 
 @SuppressWarnings("unused")
 public class CommandsUtils {
 
+    private static final Pattern COMMAND_EXECUTOR_PATTERN = Pattern.compile("@s");
+
     private static final Commands commands = new Commands();
     private static CommandDispatcher<CommandSource> dispatcher;
 
+    public static void executeCommand(CommandSender commandSender, String command) {
+        Bukkit.dispatchCommand(commandSender, command);
+    }
+
+    public static void executeCommand(String command) {
+        executeCommand(Bukkit.getConsoleSender(), command);
+    }
+
+    public static void executeCommands(CommandSender commandSender, List<String> commands) {
+        for (String command : commands)
+            executeCommand(commandSender, command);
+    }
+
     public static void executeCommands(List<String> commands) {
         for (String command : commands)
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
+            executeCommand(command);
+    }
+
+    public static void executeCommandOp(Player player, String command) {
+        executeCommand(Bukkit.getConsoleSender(), COMMAND_EXECUTOR_PATTERN.matcher(command).replaceAll(player.getName()));
     }
 
     public static void executeCommandsOp(Player player, List<String> commands) {
         for (String command : commands)
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replace("@p", player.getName()));
+            executeCommandOp(player, command);
     }
 
     public static boolean register(Plugin plugin, Command command) {

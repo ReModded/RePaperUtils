@@ -42,7 +42,10 @@ public class TextCommandsModule extends PluginModule<RePaperUtils> {
     public void setupConfig(ConfigurationSection config) {
         super.setupConfig(config);
 
-        config.addDefault("commands.pomoc", ImmutableList.of("&8### &a&1POMOC &8### "));
+        ConfigurationSection commands = config.getConfigurationSection("commands");
+        if(commands == null || commands.getKeys(false).isEmpty()) {
+            config.addDefault("commands.pomoc", ImmutableList.of("&8### &a&1POMOC &8### "));
+        }
     }
 
     private static class TextCommand extends Command {
