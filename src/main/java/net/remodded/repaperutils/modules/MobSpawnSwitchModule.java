@@ -35,8 +35,6 @@ public class MobSpawnSwitchModule extends PluginModule<RePaperUtils> {
 
     @Override
     public void setupConfig(ConfigurationSection config) {
-        super.setupConfig(config);
-
         config.addDefault("worlds", ImmutableList.of("world"));
         config.addDefault("onPlayerCount", 40);
         config.addDefault("offPlayerCount", 60);

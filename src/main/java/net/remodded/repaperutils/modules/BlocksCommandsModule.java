@@ -33,8 +33,6 @@ public class BlocksCommandsModule extends PluginModule<RePaperUtils> {
 
     @Override
     public void setupConfig(ConfigurationSection config) {
-        super.setupConfig(config);
-
         ConfigurationSection actions = config.getConfigurationSection("actions");
         if(actions == null || actions.getKeys(false).isEmpty()) {
             config.addDefault("actions.crafting.block", "crafting_table");

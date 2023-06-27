@@ -6,11 +6,10 @@ import com.mojang.brigadier.tree.LiteralCommandNode;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
-import net.remodded.repaperutils.Config;
-import net.remodded.repaperutils.commands.arguments.ModuleArgumentType;
-import net.remodded.repaperutils.utils.PluginModule;
 import net.remodded.repaperutils.RePaperUtils;
+import net.remodded.repaperutils.commands.arguments.ModuleArgumentType;
 import net.remodded.repaperutils.utils.CommandsUtils;
+import net.remodded.repaperutils.utils.PluginModule;
 
 import static net.minecraft.commands.Commands.argument;
 import static net.minecraft.commands.Commands.literal;
@@ -63,7 +62,7 @@ public class RePaperUtilsCommand {
     private static int enable(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
         PluginModule<?> module = ModuleArgumentType.getDisabledModule(ctx, "module");
         module.config().set("enabled", true);
-        Config.save();
+        module.saveConfig();
         module.enable();
         CommandsUtils.updateCommandDispatcher();
         ctx.getSource().sendSuccess(Component.literal("Włączono moduł " + module.moduleName).withStyle(s -> s.withColor(ChatFormatting.GREEN)), false);
@@ -74,7 +73,7 @@ public class RePaperUtilsCommand {
         PluginModule<?> module = ModuleArgumentType.getEnabledModule(ctx, "module");
         module.disable();
         module.config().set("enabled", false);
-        Config.save();
+        module.saveConfig();
         ctx.getSource().sendSuccess(Component.literal("Wyłączono moduł " + module.moduleName).withStyle(s -> s.withColor(ChatFormatting.GREEN)), false);
         return 0;
     }

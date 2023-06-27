@@ -15,8 +15,6 @@ public class StartupCommandsModule extends PluginModule<RePaperUtils> {
 
     @Override
     public void setupConfig(ConfigurationSection config) {
-        super.setupConfig(config);
-
         config.addDefault("delay", 200);
         config.addDefault("commands", ImmutableList.of("say Serwer Wystartował"));
     }

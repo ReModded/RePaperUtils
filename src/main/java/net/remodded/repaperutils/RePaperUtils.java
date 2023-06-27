@@ -37,7 +37,6 @@ public final class RePaperUtils extends JavaPlugin {
     @Override
     public void onEnable() {
         INSTANCE = this;
-        Config.setupConfig(modules);
         RePaperUtilsCommand.register();
 
         for (PluginModule<?> module : modules)
@@ -57,7 +56,6 @@ public final class RePaperUtils extends JavaPlugin {
     public void reload() {
         warn("Reloading " + NAME + "!");
         reloadConfig();
-        Config.setupConfig(modules);
         for (PluginModule<?> module : modules)
             module.reload();
 

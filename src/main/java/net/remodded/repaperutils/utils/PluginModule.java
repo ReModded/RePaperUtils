@@ -4,36 +4,44 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
+
+import java.io.File;
 
 public abstract class PluginModule<T extends Plugin> implements Listener {
     public final String moduleName;
 
     private boolean enabled;
 
-    protected ConfigurationSection config;
+    private final File configFile;
+    protected FileConfiguration config;
 
     protected final T plugin;
     private final Logger logger;
+
 
     protected PluginModule(String moduleName, T plugin) {
         this.plugin = plugin;
         this.moduleName = moduleName;
 
         logger = LogManager.getLogger(plugin.getName() + "] [" + moduleName);
+
+        configFile = new File(plugin.getDataFolder(), moduleName + ".yml");
+        loadConfig();
+        saveConfig();
     }
 
-    public void setupConfig(ConfigurationSection config) {
-        this.config = config;
-    }
-
-    public final void enable(){
-        if(!config.getBoolean("enabled") || enabled) return;
+    public final void enable() {
+        if(enabled) return;
+        loadConfig();
+        if(!config.getBoolean("enabled")) return;
 
         boolean inited = false;
-        try{
+        try {
             inited = init();
         } catch (Exception ex) {
             error("Unable to init module!!! (exception)");
@@ -79,6 +87,8 @@ public abstract class PluginModule<T extends Plugin> implements Listener {
     protected abstract boolean init();
     protected abstract void deinit(boolean doReload);
 
+    public void setupConfig(ConfigurationSection config) {}
+
     protected void log(String message) {
         logger.info(message);
     }
@@ -91,11 +101,31 @@ public abstract class PluginModule<T extends Plugin> implements Listener {
         logger.error(message);
     }
 
+    protected void exception(Exception e, String message) {
+        logger.error(message);
+        e.printStackTrace();
+    }
+
     public boolean isEnabled() {
         return enabled;
     }
 
     public ConfigurationSection config() {
         return config;
+    }
+
+    public void saveConfig() {
+        try {
+            config.save(configFile);
+        } catch (Exception e){
+            exception(e, "Could not save config to " + configFile);
+        }
+    }
+
+    public void loadConfig() {
+        config = YamlConfiguration.loadConfiguration(configFile);
+        config.addDefault("enabled", false);
+        setupConfig(config);
+        config.options().copyDefaults(true);
     }
 }

@@ -40,8 +40,6 @@ public class TextCommandsModule extends PluginModule<RePaperUtils> {
 
     @Override
     public void setupConfig(ConfigurationSection config) {
-        super.setupConfig(config);
-
         ConfigurationSection commands = config.getConfigurationSection("commands");
         if(commands == null || commands.getKeys(false).isEmpty()) {
             config.addDefault("commands.pomoc", ImmutableList.of("&8### &a&1POMOC &8### "));

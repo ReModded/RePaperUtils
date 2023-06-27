@@ -35,8 +35,6 @@ public class RestartModule extends PluginModule<RePaperUtils> {
 
     @Override
     public void setupConfig(ConfigurationSection config) {
-        super.setupConfig(config);
-
         config.addDefault("defaultDelay", 300);
         config.addDefault("bossbarMessage", "&b&eRestart za &2{}");
     }
