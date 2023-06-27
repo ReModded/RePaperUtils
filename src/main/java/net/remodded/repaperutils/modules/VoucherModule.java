@@ -34,7 +34,7 @@ public class VoucherModule extends PluginModule<RePaperUtils> {
     }
 
     public boolean init() {
-        dataFile = new File(plugin.getDataFolder(), "vouchers.yml");
+        dataFile = new File(plugin.getDataFolder(), "data/" + moduleName + ".yml");
         data = YamlConfiguration.loadConfiguration(dataFile);
         saveData();
         command = new VoucherCommand();

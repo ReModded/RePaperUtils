@@ -46,7 +46,7 @@ public class TimedEffectModule extends PluginModule<RePaperUtils> {
 
     @Override
     protected boolean init() {
-        dataFile = new File(plugin.getDataFolder(), moduleName + ".yml");
+        dataFile = new File(plugin.getDataFolder(), "data/" + moduleName + ".yml");
         data = YamlConfiguration.loadConfiguration(dataFile);
         data.addDefault("effects", new ArrayList<PotionEffect>());
         saveData();

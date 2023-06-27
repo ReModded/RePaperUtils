@@ -73,7 +73,7 @@ public class RenewableChestsModule extends PluginModule<RePaperUtils> {
 
     private void initConfig() {
         ConfigurationSerialization.registerClass(TreasureItem.class, "RenewableItem");
-        dataFile = new File(plugin.getDataFolder(), "renewableChests.yml");
+        dataFile = new File(plugin.getDataFolder(), "data/" + moduleName + ".yml");
         data = YamlConfiguration.loadConfiguration(dataFile);
 
         ConfigurationSection chests = data.getConfigurationSection("chests");
