@@ -36,8 +36,18 @@ public abstract class PluginModule<T extends Plugin> implements Listener {
     }
 
     public final void enable() {
+        enable(false);
+    }
+
+    public final void enable(boolean force) {
         if(enabled) return;
         loadConfig();
+
+        if (force) {
+            config.set("enabled", true);
+            saveConfig();
+        }
+
         if(!config.getBoolean("enabled")) return;
 
         boolean inited = false;
@@ -58,12 +68,12 @@ public abstract class PluginModule<T extends Plugin> implements Listener {
         }
     }
 
-    public final void disable(){
+    public final void disable() {
         disable(false);
     }
 
     private void disable(boolean doReload) {
-        if(!enabled) return;
+        if (!enabled) return;
 
         try {
             deinit(doReload);
@@ -76,9 +86,14 @@ public abstract class PluginModule<T extends Plugin> implements Listener {
         HandlerList.unregisterAll(this);
         log("Disabled module");
         enabled = false;
+
+        if (!doReload) {
+            config.set("enabled", false);
+            saveConfig();
+        }
     }
 
-    public final void reload(){
+    public final void reload() {
         if(!enabled) return;
         disable(true);
         enable();
@@ -110,11 +125,7 @@ public abstract class PluginModule<T extends Plugin> implements Listener {
         return enabled;
     }
 
-    public ConfigurationSection config() {
-        return config;
-    }
-
-    public void saveConfig() {
+    private void saveConfig() {
         try {
             config.save(configFile);
         } catch (Exception e){
@@ -122,7 +133,7 @@ public abstract class PluginModule<T extends Plugin> implements Listener {
         }
     }
 
-    public void loadConfig() {
+    private void loadConfig() {
         config = YamlConfiguration.loadConfiguration(configFile);
         config.addDefault("enabled", false);
         setupConfig(config);

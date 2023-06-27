@@ -53,6 +53,7 @@ public class RePaperUtilsCommand {
     private static int reload(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
         PluginModule<?> module = ModuleArgumentType.getEnabledModule(ctx, "module");
         module.reload();
+
         CommandsUtils.updateCommandDispatcher();
         ctx.getSource().sendSuccess(Component.literal("Przeładowano moduł " + module.moduleName).withStyle(s -> s.withColor(ChatFormatting.GREEN)), false);
         return 0;
@@ -61,9 +62,8 @@ public class RePaperUtilsCommand {
 
     private static int enable(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
         PluginModule<?> module = ModuleArgumentType.getDisabledModule(ctx, "module");
-        module.config().set("enabled", true);
-        module.saveConfig();
-        module.enable();
+        module.enable(true);
+
         CommandsUtils.updateCommandDispatcher();
         ctx.getSource().sendSuccess(Component.literal("Włączono moduł " + module.moduleName).withStyle(s -> s.withColor(ChatFormatting.GREEN)), false);
         return 0;
@@ -72,8 +72,7 @@ public class RePaperUtilsCommand {
     private static int disable(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
         PluginModule<?> module = ModuleArgumentType.getEnabledModule(ctx, "module");
         module.disable();
-        module.config().set("enabled", false);
-        module.saveConfig();
+
         ctx.getSource().sendSuccess(Component.literal("Wyłączono moduł " + module.moduleName).withStyle(s -> s.withColor(ChatFormatting.GREEN)), false);
         return 0;
     }
