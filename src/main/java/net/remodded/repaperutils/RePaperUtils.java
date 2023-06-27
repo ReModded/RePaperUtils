@@ -26,6 +26,7 @@ public final class RePaperUtils extends JavaPlugin {
         new RenewableChestsModule(this),
         new StartupCommandsModule(this),
         new TextCommandsModule(this),
+        new RestartModule(this),
         new VoucherModule(this),
         new HardcoreModule(this),
         new TimedEffectModule(this),
