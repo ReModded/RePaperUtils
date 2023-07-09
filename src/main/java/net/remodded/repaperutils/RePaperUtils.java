@@ -31,7 +31,8 @@ public final class RePaperUtils extends JavaPlugin {
         new HardcoreModule(this),
         new TimedEffectModule(this),
         new BlocksCommandsModule(this),
-        new WitherBuildBlockerModule(this)
+        new WitherBuildBlockerModule(this),
+        new EnchantmentsBlacklistModule(this)
     );
 
     @Override
