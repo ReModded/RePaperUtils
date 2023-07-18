@@ -12,7 +12,6 @@ import org.bukkit.event.enchantment.PrepareItemEnchantEvent;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class EnchantmentsBlacklistModule extends PluginModule<RePaperUtils> {
 
@@ -73,12 +72,17 @@ public class EnchantmentsBlacklistModule extends PluginModule<RePaperUtils> {
 
     @EventHandler
     private void onEnchant(EnchantItemEvent ev) {
-        Map<Enchantment, Integer> enchantments =
-                ev.getEnchantsToAdd().entrySet().stream().map(entry -> {
-                    if(replacementList.containsKey(entry.getKey()))
-                        return Map.entry(replacementList.get(entry.getKey()), entry.getValue());
-                    return entry;
-                }).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+        Map<Enchantment, Integer> enchantments = new HashMap<>();
+
+        for(var entry : ev.getEnchantsToAdd().entrySet()) {
+            if(replacementList.containsKey(entry.getKey()))
+                entry = Map.entry(replacementList.get(entry.getKey()), entry.getValue());
+
+            if(enchantments.containsKey(entry.getKey()))
+                entry.setValue(entry.getValue() + enchantments.remove(entry.getKey()));
+
+            enchantments.put(entry.getKey(), entry.getValue());
+        }
 
         ev.getEnchantsToAdd().clear();
         ev.getEnchantsToAdd().putAll(enchantments);
