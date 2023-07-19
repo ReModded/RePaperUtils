@@ -64,8 +64,13 @@ public class RePaperUtilsCommand {
         PluginModule<?> module = ModuleArgumentType.getDisabledModule(ctx, "module");
         module.enable(true);
 
-        CommandsUtils.updateCommandDispatcher();
-        ctx.getSource().sendSuccess(Component.literal("Włączono moduł " + module.moduleName).withStyle(s -> s.withColor(ChatFormatting.GREEN)), false);
+        if (!module.isEnabled()) {
+            ctx.getSource().sendSuccess(Component.literal("Wystąpił problem z włączeniem moduł " + module.moduleName).withStyle(s -> s.withColor(ChatFormatting.RED)), false);
+        }
+        else {
+            CommandsUtils.updateCommandDispatcher();
+            ctx.getSource().sendSuccess(Component.literal("Włączono moduł " + module.moduleName).withStyle(s -> s.withColor(ChatFormatting.GREEN)), false);
+        }
         return 0;
     }
 

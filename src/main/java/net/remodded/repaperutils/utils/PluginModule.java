@@ -50,12 +50,17 @@ public abstract class PluginModule<T extends Plugin> implements Listener {
 
         if(!config.getBoolean("enabled")) return;
 
+        boolean errored = false;
         boolean inited = false;
         try {
             inited = init();
         } catch (Exception ex) {
             error("Unable to init module!!! (exception)");
             ex.printStackTrace();
+
+            config.set("enabled", false);
+            saveConfig();
+            errored = true;
         }
 
         if(inited) {
@@ -63,7 +68,7 @@ public abstract class PluginModule<T extends Plugin> implements Listener {
             log("Enabled module");
             enabled = true;
         }
-        else {
+        else if(!errored) {
             error("Unable to init module!!!");
         }
     }
