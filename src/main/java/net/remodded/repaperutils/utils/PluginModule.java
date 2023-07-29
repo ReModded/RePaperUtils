@@ -55,8 +55,7 @@ public abstract class PluginModule<T extends Plugin> implements Listener {
         try {
             inited = init();
         } catch (Exception ex) {
-            error("Unable to init module!!! (exception)");
-            ex.printStackTrace();
+            exception(ex, "Unable to init module!!! (exception)");
 
             config.set("enabled", false);
             saveConfig();
@@ -74,17 +73,20 @@ public abstract class PluginModule<T extends Plugin> implements Listener {
     }
 
     public final void disable() {
-        disable(false);
+        disable(false, false);
     }
 
-    private void disable(boolean doReload) {
+    public final void shutdown() {
+        disable(false, true);
+    }
+
+    private void disable(boolean doReload, boolean force) {
         if (!enabled) return;
 
         try {
             deinit(doReload);
         } catch (Exception ex) {
-            error("Unable to disable " + moduleName + " properly");
-            ex.printStackTrace();
+            exception(ex, "Unable to disable " + moduleName + " properly");
             return;
         }
 
@@ -92,7 +94,7 @@ public abstract class PluginModule<T extends Plugin> implements Listener {
         log("Disabled module");
         enabled = false;
 
-        if (!doReload) {
+        if (!doReload && force) {
             config.set("enabled", false);
             saveConfig();
         }
@@ -100,7 +102,7 @@ public abstract class PluginModule<T extends Plugin> implements Listener {
 
     public final void reload() {
         if(!enabled) return;
-        disable(true);
+        disable(true, false);
         enable();
     }
 
@@ -123,7 +125,7 @@ public abstract class PluginModule<T extends Plugin> implements Listener {
 
     protected void exception(Exception e, String message) {
         logger.error(message);
-        e.printStackTrace();
+        logger.error(e);
     }
 
     public boolean isEnabled() {

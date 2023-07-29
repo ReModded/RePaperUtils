@@ -76,7 +76,7 @@ public class RePaperUtilsCommand {
 
     private static int disable(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
         PluginModule<?> module = ModuleArgumentType.getEnabledModule(ctx, "module");
-        module.disable();
+        module.shutdown();
 
         ctx.getSource().sendSuccess(Component.literal("Wyłączono moduł " + module.moduleName).withStyle(s -> s.withColor(ChatFormatting.GREEN)), false);
         return 0;
