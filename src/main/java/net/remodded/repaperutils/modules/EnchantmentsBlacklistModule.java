@@ -75,13 +75,16 @@ public class EnchantmentsBlacklistModule extends PluginModule<RePaperUtils> {
         Map<Enchantment, Integer> enchantments = new HashMap<>();
 
         for(var entry : ev.getEnchantsToAdd().entrySet()) {
-            if(replacementList.containsKey(entry.getKey()))
-                entry = Map.entry(replacementList.get(entry.getKey()), entry.getValue());
+            Enchantment ench = entry.getKey();
+            int value = entry.getValue();
 
-            if(enchantments.containsKey(entry.getKey()))
-                entry.setValue(entry.getValue() + enchantments.remove(entry.getKey()));
+            if(replacementList.containsKey(ench))
+                ench = replacementList.get(ench);
 
-            enchantments.put(entry.getKey(), entry.getValue());
+            if(enchantments.containsKey(ench))
+                value += enchantments.remove(ench);
+
+            enchantments.put(ench, value);
         }
 
         ev.getEnchantsToAdd().clear();
