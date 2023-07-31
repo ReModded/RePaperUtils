@@ -2,8 +2,6 @@ package net.remodded.repaperutils.modules;
 
 import net.remodded.repaperutils.RePaperUtils;
 import net.remodded.repaperutils.utils.PluginModule;
-import org.bukkit.HeightMap;
-import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.BlockGrowEvent;
@@ -41,11 +39,9 @@ public class HardcoreModule extends PluginModule<RePaperUtils> {
     @EventHandler
     private void onPlantGrow(BlockGrowEvent ev) {
         Block block = ev.getBlock();
-        World world = block.getWorld();
 
         // Sky blocking
-        Block topBlock = world.getHighestBlockAt(block.getLocation(), HeightMap.OCEAN_FLOOR);
-        if(topBlock.getLightFromSky() != 15){
+        if(block.getLightFromSky() < 15) {
             ev.setCancelled(true);
             return;
         }
