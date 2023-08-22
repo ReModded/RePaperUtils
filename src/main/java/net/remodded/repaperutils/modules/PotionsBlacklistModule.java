@@ -59,10 +59,7 @@ public class PotionsBlacklistModule extends PluginModule<RePaperUtils> {
                 !(stack.getItemMeta() instanceof PotionMeta))
                 continue;
             
-            PotionMeta meta = (PotionMeta)stack.getItemMeta(); 
-            
-            log("potion: " + meta.getBasePotionData().getType().getEffectType());
-        
+            PotionMeta meta = (PotionMeta)stack.getItemMeta();         
             if (blacklist.contains(meta.getBasePotionData().getType().getEffectType())) 
                 event.setCancelled(true);
         }
