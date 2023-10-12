@@ -45,7 +45,7 @@ public class RePaperUtilsCommand {
 
     private static int reloadAll(CommandContext<CommandSourceStack> ctx) {
         RePaperUtils.INSTANCE.reload();
-        ctx.getSource().sendSuccess(Component.literal("Przeładowano plugin"), false);
+        ctx.getSource().sendSuccess(() -> Component.literal("Przeładowano plugin"), false);
         CommandsUtils.updateCommandDispatcher();
         return 0;
     }
@@ -55,7 +55,7 @@ public class RePaperUtilsCommand {
         module.reload();
 
         CommandsUtils.updateCommandDispatcher();
-        ctx.getSource().sendSuccess(Component.literal("Przeładowano moduł " + module.moduleName).withStyle(s -> s.withColor(ChatFormatting.GREEN)), false);
+        ctx.getSource().sendSuccess(() -> Component.literal("Przeładowano moduł " + module.moduleName).withStyle(s -> s.withColor(ChatFormatting.GREEN)), false);
         return 0;
     }
 
@@ -65,11 +65,11 @@ public class RePaperUtilsCommand {
         module.enable(true);
 
         if (!module.isEnabled()) {
-            ctx.getSource().sendSuccess(Component.literal("Wystąpił problem z włączeniem moduł " + module.moduleName).withStyle(s -> s.withColor(ChatFormatting.RED)), false);
+            ctx.getSource().sendSuccess(() -> Component.literal("Wystąpił problem z włączeniem moduł " + module.moduleName).withStyle(s -> s.withColor(ChatFormatting.RED)), false);
         }
         else {
             CommandsUtils.updateCommandDispatcher();
-            ctx.getSource().sendSuccess(Component.literal("Włączono moduł " + module.moduleName).withStyle(s -> s.withColor(ChatFormatting.GREEN)), false);
+            ctx.getSource().sendSuccess(() -> Component.literal("Włączono moduł " + module.moduleName).withStyle(s -> s.withColor(ChatFormatting.GREEN)), false);
         }
         return 0;
     }
@@ -78,7 +78,7 @@ public class RePaperUtilsCommand {
         PluginModule<?> module = ModuleArgumentType.getEnabledModule(ctx, "module");
         module.shutdown();
 
-        ctx.getSource().sendSuccess(Component.literal("Wyłączono moduł " + module.moduleName).withStyle(s -> s.withColor(ChatFormatting.GREEN)), false);
+        ctx.getSource().sendSuccess(() -> Component.literal("Wyłączono moduł " + module.moduleName).withStyle(s -> s.withColor(ChatFormatting.GREEN)), false);
         return 0;
     }
 }
