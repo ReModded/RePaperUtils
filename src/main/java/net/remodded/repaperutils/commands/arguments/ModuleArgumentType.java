@@ -45,7 +45,7 @@ public class ModuleArgumentType implements SuggestionProvider<CommandSourceStack
 
     public static PluginModule<?> getModule(CommandContext<CommandSourceStack> ctx, String name) throws CommandSyntaxException {
         String moduleName = StringArgumentType.getString(ctx, name);
-        return RePaperUtils.INSTANCE.modules.stream()
+        return RePaperUtils.modules.stream()
                 .filter(customer -> moduleName.equalsIgnoreCase(customer.moduleName))
                 .findAny()
                 .orElseThrow(UNKNOWN_MODULE::create);
@@ -75,7 +75,7 @@ public class ModuleArgumentType implements SuggestionProvider<CommandSourceStack
 
     @Override
     public CompletableFuture<Suggestions> getSuggestions(CommandContext<CommandSourceStack> context, SuggestionsBuilder builder) {
-        return SharedSuggestionProvider.suggest(RePaperUtils.INSTANCE.modules.stream()
+        return SharedSuggestionProvider.suggest(RePaperUtils.modules.stream()
                 .filter(m -> (allowDisabled && !m.isEnabled()) || (allowEnabled && m.isEnabled()))
                 .map(m -> m.moduleName)
                 .toArray(String[]::new), builder);
