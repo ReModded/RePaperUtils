@@ -65,7 +65,7 @@ public class RestartModule extends PluginModule<RePaperUtils> {
     private void initCommand() {
         command = CommandsUtils.register(plugin,
             literal("restart")
-                .requires(CommandsUtils.getPermissionRequirements("restart"))
+                .requires(CommandsUtils.getPermissionRequirements(plugin, "restart"))
                 .then(literal("--abort")
                     .executes(ctx -> {
                         int r = abortRestart();
@@ -109,7 +109,7 @@ public class RestartModule extends PluginModule<RePaperUtils> {
 
             message.append(sec).append("s");
 
-            bossBar.setTitle(this.config.getString("bossbarMessage").replace("{}", message.toString()).replace('&', '§'));
+            bossBar.setTitle(this.config.getString("bossbarMessage", "").replace("{}", message.toString()).replace('&', '§'));
             bossBar.setProgress((double)left / delay);
         }, 1, 20);
 

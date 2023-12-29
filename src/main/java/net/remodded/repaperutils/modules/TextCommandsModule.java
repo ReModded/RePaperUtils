@@ -8,6 +8,7 @@ import net.remodded.repaperutils.utils.PluginModule;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,11 +53,11 @@ public class TextCommandsModule extends PluginModule<RePaperUtils> {
         public TextCommand(String name, List<String> lines){
             super(name);
             this.lines = lines;
-            setPermission(CommandsUtils.createCommandPermission("textCommands." + name));
+            setPermission(CommandsUtils.createCommandPermission(RePaperUtils.INSTANCE, "textCommands." + name));
         }
 
         @Override
-        public boolean execute(CommandSender sender, String commandLabel, String[] args) {
+        public boolean execute(@NotNull CommandSender sender, @NotNull String commandLabel, String[] args) {
             for (String line : lines)
                 sender.sendMessage(LegacyComponentSerializer.legacyAmpersand().deserialize(line));
             return true;

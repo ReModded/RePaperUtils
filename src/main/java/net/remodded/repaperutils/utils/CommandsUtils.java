@@ -7,7 +7,6 @@ import com.mojang.brigadier.tree.LiteralCommandNode;
 import net.minecraft.commands.CommandSource;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.remodded.repaperutils.RePaperUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandMap;
@@ -91,12 +90,12 @@ public class CommandsUtils {
        ((CraftServer)Bukkit.getServer()).syncCommands();
    }
 
-    public static String createCommandPermission(final String permission) {
-        return RePaperUtils.ID + "." + permission;
+    public static String createCommandPermission(Plugin plugin, final String permission) {
+        return plugin.getName().toLowerCase() + "." + permission;
    }
 
-    public static Predicate<CommandSourceStack> getPermissionRequirements(String permission) {
-        return src -> src.getBukkitSender().hasPermission(CommandsUtils.createCommandPermission(permission));
+    public static Predicate<CommandSourceStack> getPermissionRequirements(Plugin plugin, String permission) {
+        return src -> src.getBukkitSender().hasPermission(CommandsUtils.createCommandPermission(plugin, permission));
     }
 
     private static String getPermission(final Plugin plugin, final CommandNode<CommandSourceStack> command) {

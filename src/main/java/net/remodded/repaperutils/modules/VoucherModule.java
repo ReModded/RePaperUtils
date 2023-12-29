@@ -16,6 +16,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
@@ -63,12 +64,12 @@ public class VoucherModule extends PluginModule<RePaperUtils> {
 
         private VoucherCommand() {
             super("voucher");
-            setPermission(CommandsUtils.createCommandPermission("voucher"));
+            setPermission(CommandsUtils.createCommandPermission(RePaperUtils.INSTANCE, "voucher"));
             setUsage("/voucher <kod>");
         }
 
         @Override
-        public List<String> tabComplete(CommandSender sender, String alias, String[] args) throws IllegalArgumentException {
+        public @NotNull List<String> tabComplete(CommandSender sender, @NotNull String alias, String[] args) throws IllegalArgumentException {
             if (!sender.hasPermission(getPermission() + ".add"))
                 return ImmutableList.of();
             if (args.length == 1)
@@ -77,7 +78,7 @@ public class VoucherModule extends PluginModule<RePaperUtils> {
         }
 
         @Override
-        public boolean execute(CommandSender sender, String commandLabel, String[] args) {
+        public boolean execute(@NotNull CommandSender sender, @NotNull String commandLabel, String[] args) {
             if (!(sender instanceof Player player)) {
                 sender.sendMessage(Component.text("Komenda może zostać wykonana jedynie przez gracza!", NamedTextColor.RED));
                 return false;

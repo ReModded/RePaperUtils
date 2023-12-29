@@ -107,7 +107,7 @@ public class TimedEffectModule extends PluginModule<RePaperUtils> {
         CommandBuildContext commandbuildcontext = Commands.createValidationContext(VanillaRegistries.createLookup());
         command = CommandsUtils.register(plugin,
             literal("timedeffect")
-                .requires(CommandsUtils.getPermissionRequirements("timedeffect"))
+                .requires(CommandsUtils.getPermissionRequirements(plugin, "timedeffect"))
                 .then(literal("list")
                     .executes(src -> {
                         var msg = Component.literal("Działające efekty:");
