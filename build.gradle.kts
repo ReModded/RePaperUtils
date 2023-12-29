@@ -20,7 +20,7 @@ repositories {
 }
 
 dependencies {
-    paperweight.paperDevBundle("1.20.2-R0.1-SNAPSHOT")
+    paperweight.paperDevBundle("1.20.4-R0.1-SNAPSHOT")
     implementation("me.NoChance.PvPManager:PvPManager:3.10.0")
     compileOnly("com.github.angeschossen:LandsAPI:6.8.3")
 
