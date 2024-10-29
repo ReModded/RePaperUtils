@@ -2,7 +2,6 @@ package net.remodded.repaperutils.commands;
 
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import com.mojang.brigadier.tree.LiteralCommandNode;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
@@ -11,13 +10,15 @@ import net.remodded.repaperutils.commands.arguments.ModuleArgumentType;
 import net.remodded.repaperutils.utils.CommandsUtils;
 import net.remodded.repaperutils.utils.PluginModule;
 
+import java.util.List;
+
 import static net.minecraft.commands.Commands.argument;
 import static net.minecraft.commands.Commands.literal;
 
 public class RePaperUtilsCommand {
 
     public static void register() {
-        LiteralCommandNode<CommandSourceStack> command =
+        var command =
             literal(RePaperUtils.ID)
                 .then(literal("reload")
                     .executes(RePaperUtilsCommand::reloadAll)
@@ -35,11 +36,9 @@ public class RePaperUtilsCommand {
                     .then(argument("module", ModuleArgumentType.get())
                         .suggests(ModuleArgumentType.enabled())
                         .executes(RePaperUtilsCommand::disable)
-                ))
-        .build();
+                ));
 
-        CommandsUtils.register(RePaperUtils.INSTANCE, command);
-        CommandsUtils.register(RePaperUtils.INSTANCE, literal("reu").redirect(command));
+        CommandsUtils.register(RePaperUtils.INSTANCE, command, List.of("reu"));
     }
 
 

@@ -5,6 +5,8 @@ import net.remodded.repaperutils.modules.*;
 import net.remodded.repaperutils.utils.PluginModule;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.bukkit.Bukkit;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
@@ -22,9 +24,9 @@ public final class RePaperUtils extends JavaPlugin {
     @Override
     public void onEnable() {
         INSTANCE = this;
-        
+
         registerModules();
-        
+
         RePaperUtilsCommand.register();
 
         for (PluginModule<?> module : modules)
@@ -49,9 +51,13 @@ public final class RePaperUtils extends JavaPlugin {
 
         log(NAME + " reloaded!");
     }
-    
+
     private void registerModules() {
-        modules.add(new BlockPvPEscapeModule(this));
+        PluginManager pluginManager = Bukkit.getPluginManager();
+
+        if (pluginManager.isPluginEnabled("Lands") && pluginManager.isPluginEnabled("PvPManager"))
+            modules.add(new BlockPvPEscapeModule(this));
+
         modules.add(new DisableMobSpawnersModule(this));
         modules.add(new DisablePortalsModule(this));
         modules.add(new InvulnerabilityModule(this));

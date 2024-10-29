@@ -1,11 +1,11 @@
 package net.remodded.repaperutils.modules;
 
 import me.NoChance.PvPManager.PvPManager;
-import me.angeschossen.lands.api.events.player.PlayerAreaEnterEvent;
+import me.angeschossen.lands.api.events.player.area.PlayerAreaEnterEvent;
 import me.angeschossen.lands.api.flags.Flags;
+import me.angeschossen.lands.api.player.LandPlayer;
 import net.remodded.repaperutils.utils.PluginModule;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import net.remodded.repaperutils.RePaperUtils;
 
@@ -38,8 +38,8 @@ public class BlockPvPEscapeModule extends PluginModule<RePaperUtils> {
 
     @EventHandler
     public void onPlayerEnter(PlayerAreaEnterEvent ev) {
-        Player player = ev.getLandPlayer().getPlayer();
-        if(ev.getArea().hasFlag(player, Flags.LAND_ENTER, false) && pvpManager.getPlayerHandler().get(player).isInCombat())
+        LandPlayer player = ev.getLandPlayer();
+        if(ev.getArea().hasRoleFlag(player, Flags.LAND_ENTER, null, false) && pvpManager.getPlayerHandler().get(player.getPlayer()).isInCombat())
             ev.setCancelled(true);
     }
 }

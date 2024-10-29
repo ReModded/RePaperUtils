@@ -1,16 +1,15 @@
+import xyz.jpenilla.resourcefactory.paper.PaperPluginYaml
+
 plugins {
     `java-library`
-    id("io.papermc.paperweight.userdev") version "1.5.5"
-    id("xyz.jpenilla.run-paper") version "2.2.0" // Adds runServer and runMojangMappedServer tasks for testing
+    id("io.papermc.paperweight.userdev") version "1.7.4"
+    id("xyz.jpenilla.run-paper") version "2.3.1" // Adds runServer and runMojangMappedServer tasks for testing
+    id("xyz.jpenilla.resource-factory-paper-convention") version "1.2.0"
 }
 
 group = "net.remodded"
 version = "1.0.0"
 description = ""
-
-java {
-    toolchain.languageVersion.set(JavaLanguageVersion.of(17))
-}
 
 repositories {
     mavenCentral()
@@ -20,39 +19,32 @@ repositories {
 }
 
 dependencies {
-    paperweight.paperDevBundle("1.20.4-R0.1-SNAPSHOT")
-    implementation("me.NoChance.PvPManager:PvPManager:3.10.0")
-    compileOnly("com.github.angeschossen:LandsAPI:6.8.3")
+    paperweight.paperDevBundle("1.21.1-R0.1-SNAPSHOT")
+    implementation("me.NoChance.PvPManager:pvpmanager:3.18.16")
+    compileOnly("com.github.angeschossen:LandsAPI:7.9.17")
 
     compileOnly(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
 }
 
 tasks {
-    // Configure reobfJar to run when invoking the build task
-    assemble {
-        dependsOn(reobfJar)
-    }
-
     compileJava {
         options.encoding = Charsets.UTF_8.name() // We want UTF-8 for everything
-        options.release.set(17)
     }
-    
+
     javadoc {
         options.encoding = Charsets.UTF_8.name() // We want UTF-8 for everything
     }
-    
-    processResources {
-        filteringCharset = Charsets.UTF_8.name() // We want UTF-8 for everything
-        val props = mapOf(
-            "name" to project.name,
-            "version" to project.version,
-            "description" to project.description,
-            "apiVersion" to "1.20"
-        )
-        inputs.properties(props)
-        filesMatching("plugin.yml") {
-            expand(props)
-        }
+}
+
+paperPluginYaml {
+    name = project.name
+    version = project.version.toString()
+    description = project.description
+    main = "net.remodded.repaperutils.RePaperUtils"
+
+    apiVersion = "1.21.1"
+    dependencies {
+        server("Lands", PaperPluginYaml.Load.BEFORE, false)
+        server("PvPManager", PaperPluginYaml.Load.BEFORE, false)
     }
 }

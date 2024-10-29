@@ -1,33 +1,46 @@
 package net.remodded.repaperutils.utils;
 
-import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.tree.CommandNode;
 import com.mojang.brigadier.tree.LiteralCommandNode;
-import net.minecraft.commands.CommandSource;
+import io.papermc.paper.command.brigadier.ApiMirrorRootNode;
+import io.papermc.paper.command.brigadier.ShadowBrigNode;
+import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
 import net.minecraft.commands.CommandSourceStack;
-import net.minecraft.commands.Commands;
+import net.minecraft.server.MinecraftServer;
+import net.remodded.repaperutils.RePaperUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandMap;
 import org.bukkit.command.CommandSender;
-import org.bukkit.craftbukkit.v1_20_R3.CraftServer;
-import org.bukkit.craftbukkit.v1_20_R3.command.VanillaCommandWrapper;
+import org.bukkit.craftbukkit.CraftServer;
+import org.bukkit.craftbukkit.command.VanillaCommandWrapper;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
-@SuppressWarnings("unused")
 public class CommandsUtils {
+
+    private record Cmd(Plugin plugin, LiteralCommandNode<CommandSourceStack> command, List<String> aliases) {}
+
+    private static List<Cmd> commands = new ArrayList<>();
 
     private static final Pattern COMMAND_EXECUTOR_PATTERN = Pattern.compile("@s");
 
-    private static final Commands commands = new Commands();
-    private static CommandDispatcher<CommandSource> dispatcher;
+    static {
+        RePaperUtils.INSTANCE.getLifecycleManager().registerEventHandler(LifecycleEvents.COMMANDS, ev -> {
+//            var dispatcher = ((ApiMirrorRootNode)ev.registrar().getDispatcher().getRoot()).getDispatcher();
+            for (Cmd cmd : commands) {
+                ev.registrar().getDispatcher().getRoot().addChild(new ShadowBrigNode(cmd.command));
+//                dispatcher.register(cmd.command.createBuilder());
+            }
+        });
+    }
 
     public static void executeCommand(CommandSender commandSender, String command) {
         Bukkit.dispatchCommand(commandSender, command);
@@ -61,15 +74,23 @@ public class CommandsUtils {
     }
 
     public static Command register(final Plugin plugin, final LiteralArgumentBuilder<CommandSourceStack> commandBuilder) {
-        return register(plugin, commandBuilder.build());
+        return register(plugin, commandBuilder, List.of());
+    }
+
+    public static Command register(final Plugin plugin, final LiteralArgumentBuilder<CommandSourceStack> commandBuilder, List<String> aliases) {
+        return register(plugin, commandBuilder.build(), aliases);
     }
 
     public static Command register(final Plugin plugin, final LiteralCommandNode<CommandSourceStack> command) {
-        commands.getDispatcher().getRoot().addChild(command);
-        VanillaCommandWrapper wrapper = new VanillaCommandWrapper(commands, command);
-        wrapper.setPermission(getPermission(plugin, command));
-        Bukkit.getCommandMap().register(plugin.getName(), wrapper);
-        return wrapper;
+        return register(plugin, command, List.of());
+    }
+
+    public static Command register(final Plugin plugin, final LiteralCommandNode<CommandSourceStack> command, List<String> aliases) {
+        commands.add(new Cmd(plugin, command, aliases));
+//        VanillaCommandWrapper wrapper = new VanillaCommandWrapper(command.getName(), null, null, aliases, command);
+//        wrapper.setPermission(getPermission(plugin, command));
+//        Bukkit.getCommandMap().register(plugin.getName(), wrapper);
+        return null;
     }
 
     public static void unregister(Command command) {
@@ -82,7 +103,7 @@ public class CommandsUtils {
         commands.entrySet().stream().filter(p -> p.getValue() == command).toList().forEach(pair -> {
             commands.remove(pair.getKey());
             if(command instanceof VanillaCommandWrapper)
-                CommandsUtils.commands.getDispatcher().getRoot().removeCommand(pair.getKey());
+                MinecraftServer.getServer().getCommands().getDispatcher().getRoot().removeCommand(pair.getKey());
         });
     }
 
